@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import NavBar from "./components/NavBar";
 import Account from "./pages/Account";
-import CreateOutfit from "./pages/createOutfit";
+import CreateOutfit from "./pages/CreateOutfit.js";
 
 import "./App.css";
 // import "./styles/index.css";

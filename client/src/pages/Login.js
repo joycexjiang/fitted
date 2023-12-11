@@ -3,7 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  //second youtube tutorial
+  const [error, setError] = useState(""); // State variable to hold error message
+
   const [user, setUsers] = useState([]);
 
   const [email, setEmail] = useState("");
@@ -38,7 +39,8 @@ function Login() {
       window.location.reload();
       localStorage.setItem("token", token);
     } catch (error) {
-      console.log(error, "login error");
+      console.log("login error :(", error.response.data.message);
+      setError(error.response.data.message); // Set the error message in state
     }
   };
 
@@ -125,6 +127,8 @@ function Login() {
             Create an account
           </a>
         </p>
+
+        {error && <p className="text-red-500">{error}</p>}
       </div>
     </div>
   );

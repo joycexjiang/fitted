@@ -14,7 +14,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // quote: { type: String },
+  savedPosts: {
+    type: mongoose.Types.ObjectId,
+    ref: "outfits",
+  },
 });
 
 const User = mongoose.model("User", userSchema);

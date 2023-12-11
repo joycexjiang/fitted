@@ -3,7 +3,8 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
 function SignUp() {
-  //second youtube tutorial
+  const [error, setError] = useState(""); // State variable to hold error message
+
   const [user, setUsers] = useState([]);
 
   const navigate = useNavigate();
@@ -34,30 +35,10 @@ function SignUp() {
         navigate("/login");
       })
       .catch((error) => {
-        console.log("unable to register user :(");
+        console.log("unable to register user :(", error.response.data.message);
+        setError(error.response.data.message); // Set the error message in state
       });
   };
-  // async function registerUser(event) {
-  //   event.preventDefault();
-
-  //   const response = await fetch("http://localhost:5000/api/register", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       name,
-  //       email,
-  //       password,
-  //     }),
-  //   });
-
-  //   const data = await response.json();
-
-  //   if (data.status === "ok") {
-  //     history.push("/login");
-  //   }
-  // }
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -145,7 +126,7 @@ function SignUp() {
           </Link>
         </p>
 
-        {/* {error && <p className="text-red-500">{error}</p>} */}
+        {error && <p className="text-red-500">{error}</p>}
       </div>
     </div>
   );
