@@ -18,6 +18,9 @@ function NavBar() {
       <ul className="flex gap-6">
         {isUserSignedIn ? (
           <>
+            <Link to="/create-post">
+              <li>Add an outfit</li>{" "}
+            </Link>
             <Link to="/account">
               <li>Account</li>{" "}
             </Link>

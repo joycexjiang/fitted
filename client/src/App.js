@@ -4,6 +4,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import NavBar from "./components/NavBar";
 import Account from "./pages/Account";
+import CreateOutfit from "./pages/createOutfit";
+
 import "./App.css";
 // import "./styles/index.css";
 // import "./styles/tailwind.css";
@@ -21,6 +23,7 @@ function App() {
         {isUserSignedIn && <Route path="/account" element={<Account />} />}
 
         <Route path="/" element={<Dashboard />} />
+        <Route path="/create-post" element={<CreateOutfit />} />
       </Routes>
     </div>
   );

@@ -15,7 +15,7 @@ function Login() {
   }, []);
 
   const fetchUsers = () => {
-    axios.get("http://localhost:3001/register").then((res) => {
+    axios.get("http://localhost:3001/auth/register").then((res) => {
       console.log(res.data);
     });
   };
@@ -24,7 +24,7 @@ function Login() {
     event.preventDefault();
     console.log("attempting..");
     try {
-      const response = await axios.post("http://localhost:3001/login", {
+      const response = await axios.post("http://localhost:3001/auth/login", {
         email,
         password,
       });
@@ -42,30 +42,6 @@ function Login() {
     }
   };
 
-  // async function loginUser(event) {
-  //   event.preventDefault();
-
-  //   const response = await fetch("http://localhost:5000/api/login", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email,
-  //       password,
-  //     }),
-  //   });
-
-  //   const data = await response.json();
-
-  //   if (data.user) {
-  //     alert('"login successful');
-  //     window.location.href = "/dashboard";
-  //   } else {
-  //     alert("check username and password");
-  //   }
-  //   console.log(data);
-  // }
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
