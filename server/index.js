@@ -15,6 +15,7 @@ const bodyParser = require("body-parser");
 
 //importing routes
 const userRouter = require("./routes/users.js");
+const outfitsRouter = require("./routes/outfits.js");
 
 //DATABASE, connect to mongodb
 
@@ -43,7 +44,7 @@ app.use(cors());
 app.use(bodyParser.json());
 //importing routes
 app.use("/auth", userRouter);
-// app.use("/register", userRouter);
+app.use("/outfits", outfitsRouter);
 
 app.get("/", cors(), (req, res) => {
   res.send(
