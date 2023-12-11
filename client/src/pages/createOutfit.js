@@ -1,14 +1,37 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useGetUserID } from "../hooks/useGetUserID";
+import { useCookies } from "react-cookie";
+import TagInput from "../components/TagInput";
+//ICONS
+import { Cross1Icon } from "@radix-ui/react-icons";
 
-function CreateOutfit() {
+export const CreateOutfit = () => {
+  //TAGS
+  const [tags, setTags] = useState([]);
+
+  const addTag = (newTag) => {
+    setTags([...tags, newTag]);
+  };
+
+  const removeTag = (indexToRemove) => {
+    const updatedTags = tags.filter((_, index) => index !== indexToRemove);
+    setTags(updatedTags);
+  };
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const userID = useGetUserID();
+  const [cookies, _] = useCookies(["access_token"]);
+
+  const navigate = useNavigate();
+
   const [post, setPost] = useState({
     description: "",
     date: new Date(),
     tags: [],
-    imageUrl: "",
-    userOwner: 0, // Replace with an actual user ID from your application
+    imageUrl: selectedImage,
+    userOwner: userID, // Replace with an actual user ID from your application
   });
 
   const handleChange = (event) => {
@@ -31,14 +54,22 @@ function CreateOutfit() {
   const handleTagsChange = (event, idx) => {
     const { value } = event.target;
     const tags = post.tags;
-    // tags.split(",").map((tag) => tag.trim()), (tags[idx] = value);
+    tags[idx] = value;
     setPost({ ...post, tags });
+    // tags.split(",").map((tag) => tag.trim()), (tags[idx] = value);
+
     // console.log(post);
     // const tags = addIngredient(e.target.value);
   };
 
   const addTags = () => {
-    setPost({ ...post });
+    const tags = [...post.tags, ""];
+    setPost({ ...post, tags });
+  };
+
+  const handleImageChange = (e) => {
+    const file = URL.createObjectURL(e.target.files[0]);
+    setSelectedImage(file);
   };
 
   //   const onDrop = (acceptedFiles) => {
@@ -48,7 +79,24 @@ function CreateOutfit() {
   //   };
 
   //   const { getRootProps, getInputProps } = useDropzone({ onDrop });
-  console.log(post);
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await axios.post(
+        "http://localhost:3001/posts",
+        { ...post },
+        {
+          headers: { authorization: cookies.access_token },
+        }
+      );
+
+      alert("post created!");
+      navigate("/");
+    } catch (error) {
+      console.error(error, "error in submitting");
+    }
+  };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -59,7 +107,7 @@ function CreateOutfit() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={handleChange}>
+        <form className="space-y-6" onSubmit={onSubmit}>
           <div>
             <label
               htmlFor="Name"
@@ -87,12 +135,20 @@ function CreateOutfit() {
               date
             </label>
             <div className="mt-2">
-              <input
+              {/* <input
                 type="text"
                 id="date"
                 name="date"
                 // value={date}
                 onChange={handleChange}
+                className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              /> */}
+
+              <input
+                className="Input"
+                name="date"
+                onChange={handleChange}
+                type="date"
                 className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -105,31 +161,29 @@ function CreateOutfit() {
             >
               tags
             </label>
-            <div className="mt-2">
-              {post.tags.map((tag, idx) => (
-                <input
+            <div className="mt-2 flex flex-wrap ">
+              {tags.map((tag, idx) => (
+                <div
                   key={idx}
-                  type="text"
-                  id="tags"
-                  name="tags"
-                  value={tag}
-                  onChange={(event) => handleTagsChange(event, idx)}
-                  placeholder="Separate tags with commas"
-                  className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                  className="bg-indigo-200 rounded-full px-3 py-1 text-sm text-indigo-800 mr-2 mt-2 flex items-center border border-indigo-300"
+                >
+                  <span>{tag}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeTag(idx)}
+                    className="ml-2 focus:outline-none text-indigo-600 hover:text-indigo-800"
+                  >
+                    <Cross1Icon />
+                  </button>
+                </div>
               ))}
+              <TagInput onAddTag={addTag} />{" "}
+              {/* Render the TagInput component */}
             </div>
           </div>
 
-          {/* //add tags ?? */}
-
-          <button onClick={addTags} type="button">
-            {" "}
-            add ingredient{" "}
-          </button>
-
           <div>
-            <label
+            {/* <label
               htmlFor="imageUrl"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
@@ -145,6 +199,24 @@ function CreateOutfit() {
                 className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
+             */}
+            <div className="mt-2">
+              <button className="Button violet">
+                {/* className="ImageUploadLabel" */}
+                <label htmlFor="ImageUrl">
+                  {selectedImage ? "uploaded" : "upload fit"}
+                </label>
+                <input
+                  type="file"
+                  // id="imageUpload"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+              </button>
+            </div>
           </div>
 
           <div>
@@ -159,6 +231,6 @@ function CreateOutfit() {
       </div>
     </div>
   );
-}
+};
 
 export default CreateOutfit;

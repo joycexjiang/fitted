@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const outfitModel = require("../models/Fits.js");
 const UserModel = require("../models/userSchema");
+const verifyToken = require("./user.js");
 
 //getting all the outfits to show up on the main page
 router.get("/", async (req, res) => {
@@ -28,7 +29,8 @@ router.post("/", async (req, res) => {
 router.put("/", async (req, res) => {
   try {
     const outfitPost = await outfitModel.findById(req.body.outfitsID);
-    const user = await UserModel.findById(req.body.userID);
+    // const user = await UserModel.findById(req.body.userID);
+    const user = await UserModel.findById(req.body.token);
 
     user.savedPosts.push(outfitPost);
 
@@ -44,7 +46,8 @@ router.put("/", async (req, res) => {
 router.get("/savedPosts/ids", async (req, res) => {
   try {
     //get the user id to send to body
-    const user = await UserModel.findById(req.body.userID);
+    // const user = await UserModel.findById(req.body.userID);
+    const user = await UserModel.findById(req.body.token);
     res.json({ savedPosts: user?.savedPosts });
   } catch (err) {
     res.json(err);
@@ -54,7 +57,8 @@ router.get("/savedPosts/ids", async (req, res) => {
 router.get("/savedPosts", async (req, res) => {
   try {
     //get the user id to send to body
-    const user = await UserModel.findById(req.body.userID);
+    // const user = await UserModel.findById(req.body.userID);
+    const user = await UserModel.findById(req.body.token);
     const savedPosts = await outfitModel.find({
       _id: { $in: user.savedPosts },
     });
