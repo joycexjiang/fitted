@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const outfitModel = require("../models/Fits.js");
 const UserModel = require("../models/userSchema");
-const verifyToken = require("./user.js");
+// const verifyToken = require("./user.js");
 
 //getting all the outfits to show up on the main page
 router.get("/", async (req, res) => {
