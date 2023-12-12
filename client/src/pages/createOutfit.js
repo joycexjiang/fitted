@@ -7,8 +7,21 @@ import TagInput from "../components/TagInput";
 //ICONS
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { useFloating } from "@floating-ui/react";
+import Datepicker from "react-tailwindcss-datepicker";
+import { FileUploader } from "baseui/file-uploader";
 
 export const CreateOutfit = () => {
+  //DATEPICKER
+  const [date, setDateValue] = useState({
+    startDate: new Date(),
+    endDate: new Date().setMonth(11),
+  });
+
+  const handleDateValueChange = (newValue) => {
+    console.log("newValue:", newValue);
+    setDateValue(newValue);
+  };
+
   //TAGS
   const [tags, setTags] = useState([]);
 
@@ -38,18 +51,6 @@ export const CreateOutfit = () => {
   const handleChange = (event) => {
     const { description, value } = event.target;
     setPost({ ...post, [description]: value });
-
-    // e.preventDefault();
-    // // Handle form submission (sending data to the server)
-    // const formData = {
-    //   description,
-    //   date,
-    //   tags: tags.split(",").map((tag) => tag.trim()),
-    //   imageUrl,
-    //   userOwner,
-    // };
-    // console.log("Form Data:", setPost);
-    // Send formData to the server using fetch or any other library (e.g., axios)
   };
 
   const handleTagsChange = (event, idx) => {
@@ -57,10 +58,6 @@ export const CreateOutfit = () => {
     const tags = post.tags;
     tags[idx] = value;
     setPost({ ...post, tags });
-    // tags.split(",").map((tag) => tag.trim()), (tags[idx] = value);
-
-    // console.log(post);
-    // const tags = addIngredient(e.target.value);
   };
 
   const addTags = () => {
@@ -74,14 +71,6 @@ export const CreateOutfit = () => {
     console.log("Selected File:", file);
   };
 
-  //   const onDrop = (acceptedFiles) => {
-  //     const file = acceptedFiles[0];
-  //     // Here, you can handle the image upload logic, such as uploading to a server or displaying the image preview
-  //     console.log("Uploaded file:", file);
-  //   };
-
-  //   const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -92,7 +81,7 @@ export const CreateOutfit = () => {
       formData.append("tags", JSON.stringify(post.tags));
       formData.append("userOwner", post.userOwner);
 
-      await axios.post("http://localhost:3001/posts", formData, {
+      await axios.post("http://localhost:3001/outfits", formData, {
         headers: {
           authorization: cookies.access_token,
           "Content-Type": "multipart/form-data", // Set content type for form data
@@ -107,40 +96,22 @@ export const CreateOutfit = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-1  flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-full flex-1 items-center flex-col justify-center px-6 py-12 lg:px-8">
       {/* HEADER */}
       <div className="sm:mx-auto sm:w-full sm:max-w-sm ">
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           create a new post
         </h2>
       </div>
-      <div className="flex flex-0 flex-col lg:flex-row justify-center px-6 py-12 lg:px-8">
-        <div className="sm:w-1/2">
-          {" "}
-          {/* Image Upload */}
-          <div className="cursor-pointer w-full relative overflow-hidden">
-            <label
-              htmlFor="imageUpload"
-              className="flex justify-center items-center w-full h-full bg-white border-dashed border-4 border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 relative z-10"
-              style={{ height: "25rem", position: "relative" }} // Adjust height and other styles as needed
-            >
-              <span className="block pointer-events-none">
-                {selectedImage ? "Uploaded" : "Upload Pic"}
-              </span>
-              <input
-                type="file"
-                id="imageUpload"
-                name="image"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer top-0 left-0 z-20"
-              />
-            </label>
-          </div>
+
+      <div className="flex flex-0  w-3/5 flex-col space-x-6 lg:flex-row items-center justify-between px-6 py-12 lg:px-8 ">
+        {/* Image Upload */}
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <FileUploader onChange={handleImageChange} />
         </div>
 
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={onSubmit}>
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm ">
+          <form className="space-y-6 w-full" onSubmit={onSubmit}>
             <div>
               <label
                 htmlFor="Name"
@@ -154,6 +125,7 @@ export const CreateOutfit = () => {
                   id="description"
                   name="description"
                   onChange={handleChange}
+                  placeholder={"write a description of this outfit °•. ✿ .•°"}
                   required
                   className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -168,19 +140,13 @@ export const CreateOutfit = () => {
                 date
               </label>
               <div className="mt-2">
-                {/* <input
-                type="text"
-                id="date"
-                name="date"
-                // value={date}
-                onChange={handleChange}
-                className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              /> */}
-
-                <input
-                  name="date"
-                  onChange={handleChange}
-                  type="date"
+                <Datepicker
+                  primaryColor={"pink"}
+                  placeholder={"select date"}
+                  asSingle={true}
+                  useRange={false}
+                  value={date}
+                  onChange={handleDateValueChange}
                   className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -197,7 +163,7 @@ export const CreateOutfit = () => {
                 {tags.map((tag, idx) => (
                   <div
                     key={idx}
-                    className="bg-indigo-200 rounded-full px-3 py-1 text-sm text-indigo-800 mr-2 mt-2 flex items-center border border-indigo-300"
+                    className="bg-indigo-200 rounded-full px-3 py-1 text-sm text-indigo-800 mr-2 mt-2 flex items-centerborder-indigo-300"
                   >
                     <span>{tag}</span>
                     <button

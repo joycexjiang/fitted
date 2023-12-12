@@ -1,5 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@radix-ui/themes";
+import fittedLogo from "../images/fitted_logo.svg";
 
 function NavBar() {
   const isUserSignedIn = !!localStorage.getItem("token");
@@ -11,31 +13,52 @@ function NavBar() {
   };
 
   return (
-    <nav className="flex justify-around p-3 border-b border-zinc-800 items-center">
+    <nav className="flex justify-between p-3 pr-20 pl-20 items-center">
       <Link to="/">
-        <h1>fitted</h1>
+        <img
+          src={fittedLogo}
+          alt="Logo"
+          class="h-16 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20
+        lg:w-20"
+        />
       </Link>
+
       <ul className="flex gap-6">
         {isUserSignedIn ? (
           <>
-            <Link to="/create-post">
-              <li>Add an outfit</li>{" "}
-            </Link>
-            <Link to="/account">
-              <li>Account</li>{" "}
-            </Link>
-            <li>
-              <button onClick={handleSignOut}>Sign Out</button>
-            </li>
+            <Button color="crimson" variant="soft">
+              <Link to="/create-post"> add an outfit</Link>
+            </Button>
+
+            <Button variant="outline" highContrast>
+              <Link to="/account">account</Link>
+            </Button>
+
+            <Button
+              variant="outline"
+              radius="large"
+              highContrast
+              onClick={handleSignOut}
+              cursor="pointer"
+            >
+              log out
+            </Button>
           </>
         ) : (
           <>
-            <Link to="/login">
-              <li>Login</li>
-            </Link>
-            <Link to="/register">
-              <li>Signup</li>
-            </Link>
+            <Button color="crimson" radius="large" variant="soft">
+              <Link to="/login"> login</Link>
+            </Button>
+
+            <Button
+              variant="outline"
+              radius="large"
+              highContrast
+              color="crimson"
+              cursor-pointer
+            >
+              <Link to="/register"> sign up</Link>
+            </Button>
           </>
         )}
       </ul>

@@ -4,6 +4,24 @@ const bcrypt = require("bcrypt"); //hash password=
 const User = require("../models/userSchema");
 const router = express.Router();
 const SECRET_KEY = "joycesecret";
+
+//middleware
+
+const verifyToken = (req, res, next) => {
+  //send jwt through headers
+  const token = req.headers.authorization;
+  if (token) {
+    jwt.verify(token, SECRET_KEY, (err) => {
+      //user not authorized
+      if (err) return res.sendStatus(403);
+      next();
+    });
+  } else {
+    //no token to verify
+    res.sendStatus(401);
+  }
+};
+
 //USER ROUTES
 
 router.post("/register", async (req, res) => {
@@ -34,7 +52,7 @@ router.get("/register", async (req, res) => {
   }
 });
 
-//get login
+//get login info for accounts page
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -49,11 +67,15 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ userId: user._id }, SECRET_KEY, {
       expiresIn: "1hr",
     });
-    // res.json({ token, userID: user._id });
-    res.json({ message: "Login successful" });
+    // console.log({ token, userID: user._id });
+    console.log({ message: "Login successful" });
+    res.json({ token, user });
   } catch (error) {
     res.status(500).json({ error: "error signing in" });
   }
 });
 
-module.exports = router;
+module.exports = {
+  userRouter: router,
+  verifyToken: verifyToken,
+};

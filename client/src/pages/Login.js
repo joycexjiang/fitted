@@ -30,17 +30,24 @@ function Login() {
         password,
       });
       console.log("saved as a response", response.data);
-      const token = response.data.token;
-      alert("login successful!");
+      // const token = response.data.token;
+      // setEmail("");
+      // setPassword("");
+      fetchUsers();
+      // navigate("/account");
+      // window.location.reload();
+      // localStorage.setItem("token", token);
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);
+      // Save user details in local storage or context
+      localStorage.setItem("user", JSON.stringify(user)); // Save user information in local storage
       setEmail("");
       setPassword("");
-      fetchUsers();
-      navigate("/account");
+      navigate("/");
       window.location.reload();
-      localStorage.setItem("token", token);
     } catch (error) {
       console.log("login error :(", error.response.data.message);
-      setError(error.response.data.message); // Set the error message in state
+      setError("login error :( :(", error.response.data.message); // Set a default error message
     }
   };
 
@@ -48,7 +55,7 @@ function Login() {
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Sign in to your account
+          sign in to your account
         </h2>
       </div>
 
@@ -59,7 +66,7 @@ function Login() {
               htmlFor="email"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Email address
+              email address
             </label>
             <div className="mt-2">
               <input
@@ -69,7 +76,7 @@ function Login() {
                 }}
                 name="email"
                 type="email"
-                placeholder="Email"
+                placeholder="email"
                 autoComplete="email"
                 required
                 className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -83,14 +90,14 @@ function Login() {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Password
+                password
               </label>
               <div className="text-sm">
                 <a
                   href="/forgotpassword"
                   className="font-semibold text-indigo-600 hover:text-indigo-500"
                 >
-                  Forgot password?
+                  forgot password?
                 </a>
               </div>
             </div>
@@ -113,22 +120,22 @@ function Login() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign in
+              sign in
             </button>
           </div>
         </form>
 
+        {error && <p className="text-red-500">{error}</p>}
+
         <p className="mt-10 text-center text-sm text-gray-500">
-          Not a member?{" "}
+          not a member?{" "}
           <a
             href="/register"
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
-            Create an account
+            create an account
           </a>
         </p>
-
-        {error && <p className="text-red-500">{error}</p>}
       </div>
     </div>
   );
