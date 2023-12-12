@@ -115,13 +115,17 @@ export const CreateOutfit = () => {
         </h2>
       </div>
       <div className="flex flex-0 flex-col lg:flex-row justify-center px-6 py-12 lg:px-8">
-        <div className="sm:w-1/2 border border-blue-300">
+        <div className="sm:w-1/2">
           {" "}
           {/* Image Upload */}
-          <div className="cursor-pointer ">
-            <span className=" w-full h-full border border-pink-30 block bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 relative overflow-hidden">
-              <span className="block pointer-events-none justify-center">
-                {selectedImage ? "Uploaded" : "upload pic"}
+          <div className="cursor-pointer w-full relative overflow-hidden">
+            <label
+              htmlFor="imageUpload"
+              className="flex justify-center items-center w-full h-full bg-white border-dashed border-4 border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 relative z-10"
+              style={{ height: "25rem", position: "relative" }} // Adjust height and other styles as needed
+            >
+              <span className="block pointer-events-none">
+                {selectedImage ? "Uploaded" : "Upload Pic"}
               </span>
               <input
                 type="file"
@@ -129,9 +133,9 @@ export const CreateOutfit = () => {
                 name="image"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="absolute opacity-0 w-full h-full cursor-pointer top-0 left-0"
+                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer top-0 left-0 z-20"
               />
-            </span>
+            </label>
           </div>
         </div>
 
@@ -145,7 +149,7 @@ export const CreateOutfit = () => {
                 description
               </label>
               <div className="mt-2">
-                <input
+                <textarea
                   type="text"
                   id="description"
                   name="description"
