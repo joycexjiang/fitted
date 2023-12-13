@@ -46,7 +46,7 @@ function NavBar() {
           </>
         ) : (
           <>
-            <Button color="crimson" radius="large" variant="soft">
+            <Button color="indigo" radius="large" variant="soft">
               <Link to="/login"> login</Link>
             </Button>
 
@@ -54,7 +54,7 @@ function NavBar() {
               variant="outline"
               radius="large"
               highContrast
-              color="crimson"
+              color="indigo"
               cursor-pointer
             >
               <Link to="/register"> sign up</Link>
