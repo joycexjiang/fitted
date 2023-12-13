@@ -50,19 +50,18 @@ router.post("/", async (req, res) => {
 });
 
 //get all the saved posts
-
 router.get("/posts/:userId", async (req, res) => {
   try {
     //get the user id to send to body
     const user = await UserModel.findById(req.params.userId);
-    console.log("only getting the user _id field: ", user._id);
+    console.log("User ID: ", user._id);
 
     const userId = user._id;
 
     const posts = await outfitModel.find({
       _id: { $in: user.posts },
     });
-    console.log("specific user posts: ", user.posts);
+    console.log("User posts: ", user.posts);
     res.json({ userId, posts });
   } catch (err) {
     res.json(err);
@@ -84,38 +83,4 @@ router.put("/:userId/addpost", async (req, res) => {
   }
 });
 
-// //save a outfit post -- fails in postman
-// //this is for editing a post
-// router.put("/", async (req, res) => {
-//   console.log(req.body);
-//   //getting the post ID
-//   const outfitPost = await outfitModel.findById(req.body.postsID);
-//   console.log(outfitPost);
-//   //getting the user ID
-//   const user = await UserModel.findById(req.body.userID);
-//   // const user = await UserModel.findById(req.body.token);
-//   console.log(user);
-//   try {
-//     user.posts.push(outfitPost);
-//     //save user to collection
-//     await user.save();
-//     res.json({ posts: user.posts });
-//   } catch (err) {
-//     res.json(err);
-//   }
-// });
-
-// //getting a list of all the posts ids
-// router.get("/posts/ids/:userId", verifyToken, async (req, res) => {
-//   try {
-//     //get the user id to send to body
-//     const user = await UserModel.findById(req.params.userId);
-//     // const user = await UserModel.findById(req.params.token);
-//     res.json({ posts: user?.posts });
-//   } catch (err) {
-//     res.json(err);
-//   }
-// });
-
 module.exports = router;
-// exports.outfitsRouter = router;

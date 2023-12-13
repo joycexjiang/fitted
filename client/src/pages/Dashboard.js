@@ -9,22 +9,6 @@ export const Home = () => {
   const [loading, setLoading] = useState(true);
   const userID = useGetUserID();
 
-  // useEffect(() => {
-  //   console.log(userID);
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3001/outfits/posts/${userID}`
-  //       );
-  //       setPosts(response.data);
-  //       console.log(response.data.posts);
-  //     } catch (error) {
-  //       console.error(error, "error in submitting");
-  //     }
-  //   };
-  //   fetchPosts();
-  // }, []);
-
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
@@ -35,7 +19,7 @@ export const Home = () => {
         const response = await axios.get(
           `http://localhost:3001/outfits/posts/${userId}`
         );
-        console.log("response", response);
+        console.log("Response", response);
         setPosts(response.data.posts);
         setLoading(false);
       } catch (error) {

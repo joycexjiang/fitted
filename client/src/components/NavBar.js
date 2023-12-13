@@ -18,7 +18,7 @@ function NavBar() {
         <img
           src={fittedLogo}
           alt="Logo"
-          class="h-16 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20
+          className="h-16 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20
         lg:w-20"
         />
       </Link>

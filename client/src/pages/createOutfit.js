@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useGetUserID } from "../hooks/useGetUserID";
 import TagInput from "../components/TagInput";
+import { Button, Card, Text } from "@radix-ui/themes";
 
 //ICONS
 import { Cross1Icon } from "@radix-ui/react-icons";
@@ -107,14 +108,11 @@ export const CreateOutfit = () => {
       const createdOutfitId = response.data._id;
 
       // Now update the user's posts array with the created outfit's ID
-      const updatedUser = await axios.put(
-        `http://localhost:3001/outfits/${userID}/addpost`,
-        { postId: createdOutfitId }
-      );
+      await axios.put(`http://localhost:3001/outfits/${userID}/addpost`, {
+        postId: createdOutfitId,
+      });
 
-      alert("post created!");
-      // navigate("/");
-      // Handle successful post submission, e.g., show success message, redirect, etc.
+      navigate("/");
       console.log("Outfit post created:", response.data);
     } catch (error) {
       console.error(error, "error in submitting");
@@ -133,30 +131,33 @@ export const CreateOutfit = () => {
       <div className="flex flex-0 space-y-6 mt-6 w-2/5 flex-col items-center">
         {/* Image Upload */}
         <div className="w-full sm:mx-auto sm:w-full sm:max-w-sm">
-          {/* <FileUploader onChange={handleImageChange} /> */}
-          <button className="Button violet">
-            <label htmlFor="imageUpload" className="ImageUploadLabel">
-              {selectedImage ? "uploaded" : "upload fit"}
-            </label>
-            <input
-              type="file"
-              id="imageUpload"
-              name="image"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-            />
-          </button>
+          <div className="flex min-h-full flex-1 justify-center items-center space-y-6 flex-col px-6 py-12 lg:px-8 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg">
+            <Text size="1">add files here to upload </Text>
+            <Button variant="soft" color="crimson" radius="full">
+              <label
+                htmlFor="imageUpload"
+                className="ImageUploadLabel"
+                style={{ cursor: "pointer" }} // Apply cursor pointer on hover
+              >
+                {selectedImage ? "uploaded!" : "browse files"}
+              </label>
+              <input
+                type="file"
+                id="imageUpload"
+                name="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: "none" }}
+              />
+            </Button>
+          </div>
         </div>
 
         <div className="w-full sm:mx-auto sm:w-full sm:max-w-sm">
           {/* // */}
           <form className="space-y-6" onSubmit={onSubmit}>
             <div>
-              <label
-                htmlFor="Name"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
+              <label className="block text-sm font-medium leading-6 text-gray-900">
                 description
               </label>
               <div className="mt-2">
@@ -173,10 +174,7 @@ export const CreateOutfit = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="date"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
+              <label className="block text-sm font-medium leading-6 text-gray-900">
                 date
               </label>
               <div className="mt-2">
@@ -219,12 +217,16 @@ export const CreateOutfit = () => {
             </div>
 
             <div>
-              <button
+              <Button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                color="crimson"
+                variant="soft"
+                highContrast
+                radius="md"
+                className="flex w-full"
               >
                 post
-              </button>
+              </Button>
             </div>
           </form>
         </div>
