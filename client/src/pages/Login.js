@@ -30,17 +30,12 @@ function Login() {
         password,
       });
       console.log("saved as a response", response.data);
-      // const token = response.data.token;
-      // setEmail("");
-      // setPassword("");
       fetchUsers();
-      // navigate("/account");
-      // window.location.reload();
-      // localStorage.setItem("token", token);
       const { token, user } = response.data;
       localStorage.setItem("token", token);
       // Save user details in local storage or context
       localStorage.setItem("user", JSON.stringify(user)); // Save user information in local storage
+      localStorage.setItem("userID", JSON.stringify(user._id));
       setEmail("");
       setPassword("");
       navigate("/");

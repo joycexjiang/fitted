@@ -21,6 +21,7 @@ const fitsSchema = new mongoose.Schema({
   userOwner: {
     //id of the user who created the recipe
     type: mongoose.Types.ObjectId,
+    // type: String,
     ref: "User",
     required: true,
   },

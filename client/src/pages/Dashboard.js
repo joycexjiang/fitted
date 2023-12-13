@@ -6,22 +6,46 @@ import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 export const Home = () => {
   const [posts, setPosts] = useState("");
+  const [loading, setLoading] = useState(true);
   const userID = useGetUserID();
 
+  // useEffect(() => {
+  //   console.log(userID);
+  //   const fetchPosts = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:3001/outfits/posts/${userID}`
+  //       );
+  //       setPosts(response.data);
+  //       console.log(response.data.posts);
+  //     } catch (error) {
+  //       console.error(error, "error in submitting");
+  //     }
+  //   };
+  //   fetchPosts();
+  // }, []);
+
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUserPosts = async () => {
       try {
+        // Fetch the user ID from your authentication method
+        const userId = userID; // Assuming you store user ID in localStorage
+
+        // Make an API request to fetch user posts
         const response = await axios.get(
-          `http://localhost:3001/outfits/posts/${userID}`
+          `http://localhost:3001/outfits/posts/${userId}`
         );
-        setPosts(response.data);
-        console.log(response.data.posts);
+        console.log("response", response);
+        setPosts(response.data.posts);
+        setLoading(false);
       } catch (error) {
-        console.error(error, "error in submitting");
+        console.error("Error fetching user posts:", error);
+        setLoading(false);
       }
     };
-    fetchPosts();
-  }, []);
+
+    fetchUserPosts();
+  }, []); // Fetch user posts when the component mounts
 
   return (
     <div className="w-full h-screen flex justify-center items-center">

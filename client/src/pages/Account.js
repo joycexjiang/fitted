@@ -15,6 +15,7 @@ function Account() {
   useEffect(() => {
     // Retrieve user information from local storage
     const storedUser = localStorage.getItem("user");
+    console.log(storedUser);
     if (storedUser) {
       setUser(JSON.parse(storedUser)); // Parse the stored user information
     }

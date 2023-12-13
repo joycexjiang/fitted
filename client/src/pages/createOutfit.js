@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useGetUserID } from "../hooks/useGetUserID";
-import { useCookies } from "react-cookie";
 import TagInput from "../components/TagInput";
+
 //ICONS
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { useFloating } from "@floating-ui/react";
 import Datepicker from "react-tailwindcss-datepicker";
 import { FileUploader } from "baseui/file-uploader";
+const token = localStorage.getItem("token");
 
 export const CreateOutfit = () => {
+  const navigate = useNavigate();
+
   //DATEPICKER
   const [date, setDateValue] = useState({
     startDate: new Date(),
@@ -34,62 +37,85 @@ export const CreateOutfit = () => {
     setTags(updatedTags);
   };
 
+  const handleTagsChange = (event, idx) => {
+    const { value } = event.target;
+    const updatedTags = [...tags]; // Make a copy of the current tags array
+    updatedTags[idx] = value; // Update the value at the specified index
+    setPost({ ...post, tags: updatedTags }); // Update the post state with the updated tags
+  };
+
+  const addTags = () => {
+    const updatedTags = [...tags, ""];
+    setTags(updatedTags);
+    setPost({ ...post, tags: updatedTags });
+  };
+
+  //IMAGE UPLOAD
   const [selectedImage, setSelectedImage] = useState(null);
+
+  // Get user ID from localStorage
   const userID = useGetUserID();
-  const [cookies, _] = useCookies(["access_token"]);
 
-  const navigate = useNavigate();
-
+  //form submission?
   const [post, setPost] = useState({
     description: "",
     date: new Date(),
     tags: [],
-    imageUrl: selectedImage,
-    userOwner: userID, // Replace with an actual user ID from your application
+    imageUrl: "",
+    userOwner: userID,
   });
 
   const handleChange = (event) => {
-    const { description, value } = event.target;
-    setPost({ ...post, [description]: value });
-  };
-
-  const handleTagsChange = (event, idx) => {
-    const { value } = event.target;
-    const tags = post.tags;
-    tags[idx] = value;
-    setPost({ ...post, tags });
-  };
-
-  const addTags = () => {
-    const tags = [...post.tags, ""];
-    setPost({ ...post, tags });
+    const { name, value } = event.target;
+    setPost({ ...post, [name]: value });
   };
 
   const handleImageChange = (e) => {
     const file = URL.createObjectURL(e.target.files[0]);
     setSelectedImage(file);
+    setPost({ ...post, imageUrl: file });
     console.log("Selected File:", file);
   };
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("image", selectedImage); // Append the selected image to the form data
-      formData.append("description", post.description);
-      formData.append("date", post.date);
-      formData.append("tags", JSON.stringify(post.tags));
-      formData.append("userOwner", post.userOwner);
 
-      await axios.post("http://localhost:3001/outfits", formData, {
-        headers: {
-          authorization: cookies.access_token,
-          "Content-Type": "multipart/form-data", // Set content type for form data
-        },
-      });
+    try {
+      const formattedPost = {
+        description: post.description,
+        date: post.date,
+        tags: tags,
+        imageUrl: post.imageUrl,
+        userOwner: post.userOwner, // Assuming this holds the user ID
+      };
+
+      console.log("Formatted Post:", formattedPost);
+
+      // Send outfit post data to your backend
+      const response = await axios.post(
+        "http://localhost:3001/outfits/",
+        formattedPost,
+        {
+          headers: {
+            // Include any necessary headers
+            Authorization: `Bearer ${token}`, // Include authorization token if required
+          },
+        }
+      );
+
+      // Assuming the response.data contains the newly created outfit
+      const createdOutfitId = response.data._id;
+
+      // Now update the user's posts array with the created outfit's ID
+      const updatedUser = await axios.put(
+        `http://localhost:3001/outfits/${userID}/addpost`,
+        { postId: createdOutfitId }
+      );
 
       alert("post created!");
-      navigate("/");
+      // navigate("/");
+      // Handle successful post submission, e.g., show success message, redirect, etc.
+      console.log("Outfit post created:", response.data);
     } catch (error) {
       console.error(error, "error in submitting");
     }
@@ -104,14 +130,28 @@ export const CreateOutfit = () => {
         </h2>
       </div>
 
-      <div className="flex flex-0  w-3/5 flex-col space-x-6 lg:flex-row items-center justify-between px-6 py-12 lg:px-8 ">
+      <div className="flex flex-0 space-y-6 mt-6 w-2/5 flex-col items-center">
         {/* Image Upload */}
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <FileUploader onChange={handleImageChange} />
+        <div className="w-full sm:mx-auto sm:w-full sm:max-w-sm">
+          {/* <FileUploader onChange={handleImageChange} /> */}
+          <button className="Button violet">
+            <label htmlFor="imageUpload" className="ImageUploadLabel">
+              {selectedImage ? "uploaded" : "upload fit"}
+            </label>
+            <input
+              type="file"
+              id="imageUpload"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </button>
         </div>
 
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm ">
-          <form className="space-y-6 w-full" onSubmit={onSubmit}>
+        <div className="w-full sm:mx-auto sm:w-full sm:max-w-sm">
+          {/* // */}
+          <form className="space-y-6" onSubmit={onSubmit}>
             <div>
               <label
                 htmlFor="Name"
@@ -127,7 +167,7 @@ export const CreateOutfit = () => {
                   onChange={handleChange}
                   placeholder={"write a description of this outfit °•. ✿ .•°"}
                   required
-                  className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className=" w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -141,13 +181,11 @@ export const CreateOutfit = () => {
               </label>
               <div className="mt-2">
                 <Datepicker
-                  primaryColor={"pink"}
-                  placeholder={"select date"}
+                  primaryColor={"fuchsia"}
                   asSingle={true}
                   useRange={false}
                   value={date}
                   onChange={handleDateValueChange}
-                  className="block w-full p-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>

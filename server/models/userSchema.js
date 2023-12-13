@@ -14,10 +14,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  posts: {
-    type: mongoose.Types.ObjectId,
-    ref: "outfits",
-  },
+  posts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "outfits",
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

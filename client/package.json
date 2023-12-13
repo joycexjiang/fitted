@@ -15,6 +15,7 @@
     "cursor-effects": "^1.0.13",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "mongodb": "^6.3.0",
     "react": "^18.2.0",
     "react-cookie": "^6.1.1",
     "react-dom": "^18.2.0",
