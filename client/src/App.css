@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.post-container {
+  border: 1px solid #ccc; /* Add your preferred border style */
+  padding: 10px; /* Add padding for spacing */
+  display: flex;
+  flex-direction: column;
+}
+
+.post-container img {
+  width: 100%;
+}
+
+.post-container p {
+  margin-top: 10px; /* Add spacing between image and description */
+}
