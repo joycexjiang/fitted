@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@radix-ui/themes";
+import { Button, DropdownMenu } from "@radix-ui/themes";
+import { GlobeIcon } from "@radix-ui/react-icons";
 import fittedLogo from "../images/fitted_logo.svg";
 
 function NavBar() {
@@ -26,23 +27,29 @@ function NavBar() {
       <ul className="flex gap-6">
         {isUserSignedIn ? (
           <>
-            <Button color="crimson" variant="soft">
+            <Button variant="outline" highContrast>
               <Link to="/create-post"> add an outfit</Link>
             </Button>
 
-            <Button variant="outline" highContrast>
-              <Link to="/account">account</Link>
-            </Button>
-
-            <Button
-              variant="outline"
-              radius="large"
-              highContrast
-              onClick={handleSignOut}
-              cursor="pointer"
-            >
-              log out
-            </Button>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <button
+                  className="rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-pink11 bg-white shadow-[0_2px_10px] shadow-blackA4 hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-black cursor-default outline"
+                  aria-label="Account"
+                >
+                  <GlobeIcon />
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content>
+                <DropdownMenu.Item shortcut="">
+                  <Link to="/account">account</Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Separator />
+                <DropdownMenu.Item shortcut="" onClick={handleSignOut}>
+                  log out
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           </>
         ) : (
           <>

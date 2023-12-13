@@ -8,11 +8,3 @@
   display: flex;
   flex-direction: column;
 }
-
-.post-container img {
-  width: 100%;
-}
-
-.post-container p {
-  margin-top: 10px; /* Add spacing between image and description */
-}

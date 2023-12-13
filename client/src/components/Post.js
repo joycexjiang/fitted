@@ -38,8 +38,6 @@ const styles = {
   post: {
     margin: 10,
     padding: 10,
-    border: "1px solid #eee",
-    borderRadius: "16px",
   },
   small: {
     gridRowEnd: "span 26",

@@ -33,7 +33,7 @@ export const Home = () => {
   console.log("Posts:", posts); // Log posts state
 
   return (
-    <div>
+    <div className="min-w-full min-h-full justify-center px-6 py-12 lg:px-8">
       <HomeLayout posts={posts} />
     </div>
   );
